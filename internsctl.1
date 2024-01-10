@@ -1,0 +1,98 @@
+.TH INTERNSCTL 1 "January 2024" "Version 0.1.0" "Internsctl Manual"
+
+.SH NAME
+internsctl \- A script for various system management tasks
+
+.SH SYNOPSIS
+.B internsctl
+[\fIOPTIONS\fP] \fICOMMAND\fP [\fIARGUMENTS\fP]
+
+.SH DESCRIPTION
+This script provides various functionalities such as CPU and memory information retrieval, user management, and file information retrieval.
+
+.SH OPTIONS
+.TP
+.B \-\-version
+Show the version of the script.
+
+.TP
+.B \-\-help
+Show this help message.
+
+.SH COMMANDS
+.TP
+.B cpu getinfo
+Display CPU information.
+
+.TP
+.B memory getinfo
+Display memory information.
+
+.TP
+.B user create
+Create a new user.
+
+.TP
+.B user list [\-\-sudo\-only]
+List all users or sudo-only users.
+
+.TP
+.B file getinfo
+Display information about a file.
+
+.SH EXAMPLES
+.TP
+.B internsctl \-\-version
+Show the version of the script.
+
+.TP
+.B internsctl \-\-help
+Show this help message.
+
+.TP
+.B internsctl cpu getinfo
+Display CPU information.
+
+.TP
+.B internsctl memory getinfo
+Display memory information.
+
+.TP
+.B internsctl user create \fIusername\fP
+Create a new user.
+
+.TP
+.B internsctl user list
+List all users.
+
+.TP
+.B internsctl user list \-\-sudo\-only
+List sudo-only users.
+
+.TP
+.B internsctl file getinfo \-\-size \fIfilename\fP
+Display the size of the file.
+
+.TP
+.B internsctl file getinfo \-\-permissions \fIfilename\fP
+Display the permissions of the file.
+
+.TP
+.B internsctl file getinfo \-\-owner \fIfilename\fP
+Display the owner of the file.
+
+.TP
+.B internsctl file getinfo \-\-last-modified \fIfilename\fP
+Display the last modification time of the file.
+
+.SH AUTHOR
+Pratyaksh
+
+.SH SEE ALSO
+Provide references or related documentation here.
+
+.SH BUGS
+List any known issues or bugs here.
+
+.SH COPYRIGHT
+Copyright \(co 2024 Pratyaksh

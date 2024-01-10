@@ -1,0 +1,146 @@
+#!/bin/bash
+
+VERSION="v0.1.0"
+
+get_version() {
+    echo "$VERSION"
+}
+
+get_help() {
+    echo "Usage: $0 [OPTIONS] COMMAND [ARGUMENTS]"
+    echo
+    echo "Options:"
+    echo "  --version          Show the version of the script"
+    echo "  --help             Show this help message"
+    echo
+    echo "Commands:"
+    echo "  cpu getinfo        Display CPU information"
+    echo "  memory getinfo     Display memory information"
+    echo "  user create        Create a new user"
+    echo "  user list [--sudo-only]  List all users or sudo-only users"
+    echo "  file getinfo       Display information about a file"
+    echo
+    echo "Examples:"
+    echo "  $0 --version"
+    echo "  $0 --help"
+    echo "  $0 cpu getinfo"
+    echo "  $0 memory getinfo"
+    echo "  $0 user create username"
+    echo "  $0 user list"
+    echo "  $0 user list --sudo-only"
+    echo "  $0 file getinfo --size filename"
+    echo "  $0 file getinfo --permissions filename"
+    echo "  $0 file getinfo --owner filename"
+    echo "  $0 file getinfo --last-modified filename"
+}
+
+cpu_getinfo() {
+    lscpu
+}
+
+memory_getinfo() {
+    free
+}
+
+create_user() {
+    if [ -z "$1" ]; then
+        echo "Error: Please provide a username."
+        exit 1
+    fi
+
+    sudo useradd -m "$1"
+    echo "User '$1' created successfully."
+}
+
+list_users() {
+    if [ "$1" == "--sudo-only" ]; then
+        echo "Sudo only users:"
+        getent group sudo | cut -d: -f4
+    else
+        echo "All users:"
+        cut -d: -f1 /etc/passwd
+    fi
+}
+
+file_getinfo() {
+    if [ -z "$1" ]; then
+        echo "Error: Please provide a filename."
+        exit 1
+    fi
+
+    if [ "$1" == "--size" ] || [ "$1" == "-s" ]; then
+        stat -c %s "$2"
+    elif [ "$1" == "--permissions" ] || [ "$1" == "-p" ]; then
+        stat -c %A "$2"
+    elif [ "$1" == "--owner" ] || [ "$1" == "-o" ]; then
+        stat -c %U "$2"
+    elif [ "$1" == "--last-modified" ] || [ "$1" == "-m" ]; then
+        stat -c %y "$2"
+    else
+        file="$1"
+        access=$(stat -c %A "$file")
+        size=$(stat -c %s "$file")
+        owner=$(stat -c %U "$file")
+        modify=$(stat -c %y "$file")
+
+        echo "File: $file"
+        echo "Access: $access"
+        echo "Size(B): $size"
+        echo "Owner: $owner"
+        echo "Modify: $modify"
+        exit 1
+    fi
+}
+
+case "$1" in
+    "--version")
+    get_version
+    ;;
+
+    "--help")
+    get_help
+    ;;
+
+    "cpu")
+    shift
+    case "$1" in
+        "getinfo")
+        cpu_getinfo
+        ;;
+    esac
+    ;;
+
+    "memory")
+    shift
+    case "$1" in
+        "getinfo")
+        memory_getinfo
+        ;;
+    esac
+    ;;
+
+    "user")
+    shift
+    case "$1" in
+        "create")
+        shift
+        create_user "$@"
+        ;;
+
+        "list")
+        shift
+        list_users "$@"
+        ;;
+    esac
+    ;;
+
+    "file")
+    shift
+    case "$1" in
+        "getinfo")
+        shift
+        file_getinfo "$@"
+        ;;
+    esac
+    ;;
+esac
